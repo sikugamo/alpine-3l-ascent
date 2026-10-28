@@ -3,10 +3,11 @@
 set -e
 . ~/.local/opt/env.sh
 cd "$(dirname "$0")"
-# COMP=AlpineAscent (v1, default) or COMP=AlpineLaunch (v2)
+# COMP=AlpineAscent (v1, default), AlpineLaunch (v2) or AlpineGenesis (v3)
 COMP=${COMP:-AlpineAscent}
 export COMP
-if [ "$COMP" = AlpineLaunch ]; then RANGES="0-479 480-959 960-1439"; NAME=alpine-3l-launch; else RANGES="0-459 460-919 920-1379"; NAME=alpine-3l-ascent; fi
+if [ "$COMP" = AlpineGenesis ]; then RANGES="0-479 480-959 960-1439"; NAME=alpine-3l-genesis;
+elif [ "$COMP" = AlpineLaunch ]; then RANGES="0-479 480-959 960-1439"; NAME=alpine-3l-launch; else RANGES="0-459 460-919 920-1379"; NAME=alpine-3l-ascent; fi
 C=out/chunks/$COMP
 mkdir -p $C
 for r in $RANGES; do
@@ -18,4 +19,9 @@ done
 [ -s $C/audio.wav ] || { node render.mjs $C/tmp_audio.wav audio > $C/log_audio.txt 2>&1; mv $C/tmp_audio.wav $C/audio.wav; echo "done audio"; }
 : > $C/list.txt; for r in $RANGES; do echo "file 'v_$r.mp4'" >> $C/list.txt; done
 ffmpeg -v error -y -f concat -safe 0 -i $C/list.txt -i $C/audio.wav -map 0:v -map 1:a -c:v copy -af "alimiter=limit=0.84:level=false:attack=2:release=60" -c:a aac -b:a 256k -movflags +faststart -shortest out/$NAME.mp4
+# Optional: FINAL_CRF=20 re-encodes the muxed film smaller (dense particle shots are heavy at CRF 16).
+if [ -n "$FINAL_CRF" ]; then
+  ffmpeg -v error -y -i out/$NAME.mp4 -c:v libx264 -preset slow -crf "$FINAL_CRF" -pix_fmt yuv420p -c:a copy -movflags +faststart out/$NAME.tmp.mp4
+  mv out/$NAME.tmp.mp4 out/$NAME.mp4
+fi
 echo "muxed"
