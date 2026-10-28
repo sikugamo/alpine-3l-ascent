@@ -8,7 +8,8 @@ const [output, range] = process.argv.slice(2);
 const browserExecutable = process.env.CHS;
 const chromiumOptions = { gl: 'swangle' };
 const serveUrl = await bundle({ entryPoint: path.resolve('src/index.ts') });
-const composition = await selectComposition({ serveUrl, id: 'AlpineAscent', browserExecutable, chromiumOptions, timeoutInMilliseconds: 120000 });
+const id = process.env.COMP ?? 'AlpineAscent';
+const composition = await selectComposition({ serveUrl, id, browserExecutable, chromiumOptions, timeoutInMilliseconds: 120000 });
 const audio = range === 'audio';
 let last = -10;
 await renderMedia({
