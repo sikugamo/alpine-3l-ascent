@@ -1,15 +1,42 @@
 # ALPINE 3L — promo films
 
-Three versions of a promotional film for the same jacket, all rendered from this project:
+Four versions of a promotional film for the same jacket, all rendered from this project:
 
 | Version | Watch | Style |
 | --- | --- | --- |
-| **v3 · Genesis** | [`alpine-3l-genesis.mp4`](alpine-3l-genesis.mp4) (48 s) | Futuristic motion: particle-built product and numbers, holographic X-ray scan, glitch cuts, warp-speed reel, 3D spec orbit, implosion finale |
+| **v4 · Interface** | [`alpine-3l-interface.mp4`](alpine-3l-interface.mp4) (48 s) | v3 wrapped in a live HUD/FUI: boot-up chrome, radar, telemetry, event log, reticle lock-ons, and animated information layers per chapter |
+| v3 · Genesis | [`alpine-3l-genesis.mp4`](alpine-3l-genesis.mp4) (48 s) | Futuristic motion: particle-built product and numbers, holographic X-ray scan, glitch cuts, warp-speed reel, 3D spec orbit, implosion finale |
 | v2 · Launch | [`alpine-3l-launch.mp4`](alpine-3l-launch.mp4) (48 s) | Tech product-launch keynote: dark stage, spotlit product, metallic display type, glass spec tiles, beat-synced cuts |
 | v1 · Ascent | [`alpine-3l-ascent.mp4`](alpine-3l-ascent.mp4) (46 s) | Narrative climb: altimeter HUD, rain → gale → snow, whiteout end card |
 
 All are 1920×1080 promotional films for the ALPINE 3L hardshell hiking jacket, built with Remotion from the
 product photos and spec sheet in [`vcproo/video-publicity`](https://github.com/vcproo/video-publicity) (clone it into `source/` to see the originals; the images the film uses are already copied into `film/public/img`).
+
+## v4 · Interface
+
+**Concept:** the Genesis film seen through the jacket's own operating interface. The picture underneath is v3,
+unchanged. On top sit two new layers:
+
+- **FUI chrome** (`src/fui/chrome.tsx`): it boots on, drawing in corner brackets, scrolling tick rulers and side
+  rails, and shuts down at the end ("SESSION END"). It carries:
+  - an ident panel with the chapter name, timecode and a beat-synced level meter
+  - spec telemetry
+  - a radar sweep with blips
+  - a system log whose entries are pinned to the on-screen events
+  - a hex data stream
+  - a chapter timeline
+  - a reticle that glides between points of interest and re-locks
+- **Information layers** (`src/fui/layers.tsx`), one per chapter:
+  - an assembly progress ring with a particle count
+  - target-acquired brackets
+  - a scan-depth ruler riding the X-ray bar, and a separation ring around the layer slabs
+  - hydrostatic-head and MVTR charts climbing to the spec thresholds
+  - a zone mini-map with a metadata panel for each feature
+  - a donut of the 65/12/23 mass mix
+  - "ALL SYSTEMS NOMINAL", turning into an amber "CORE COLLAPSE" hazard frame before the implosion
+
+Every number in the interface is from the spec sheet. The chart traces are illustrative curves that climb to the
+published thresholds, not test data. UI sound cues are layered on top of the v3 score.
 
 ## v3 · Genesis
 
@@ -73,7 +100,7 @@ targets, as the spec sheet states. The altitude, temperature and route are ficti
 alpine-3l-ascent.mp4 final film (1920×1080, 30 fps, AAC audio)
 source/              cloned asset repo (not committed)
 film/
-  src/Root.tsx       registers all compositions: AlpineAscent (v1), AlpineLaunch (v2), AlpineGenesis (v3)
+  src/Root.tsx       registers all compositions: AlpineAscent (v1), AlpineLaunch (v2), AlpineGenesis (v3), AlpineInterface (v4)
   src/theme.ts       fonts, v1 palette and timing table (fonts are shared by all versions)
   src/fx.tsx         v1: procedural weather, whiteout, contour lines, altimeter HUD, grain
   src/scenes.tsx     v1: the seven scenes
@@ -83,7 +110,10 @@ film/
   src/launch/Launch.tsx   v2: sequencing and audio mix
   src/genesis/engine.tsx  v3: particle sampling + canvas, decode text, RGB-split/slice glitch, warp, grid floor, scanlines
   src/genesis/scenes.tsx  v3: the seven chapters
-  src/genesis/Genesis.tsx v3: sequencing and audio mix
+  src/genesis/Genesis.tsx v3: sequencing and audio mix (its chapter and audio tables are reused by v4)
+  src/fui/chrome.tsx      v4: persistent HUD/FUI chrome
+  src/fui/layers.tsx      v4: per-chapter information layers
+  src/fui/Interface.tsx   v4: v3 picture + layers + chrome, v3 score + UI cues
   tools/make-audio.sh         v1 score stems (rain, wind, drone, thump, bell)
   tools/make-launch-audio.py  v2 score stems (120 BPM kick, hats, bass, arp, pad, risers)
   tools/make-genesis-audio.py v3 score stems (sub drops, reese bass, arp, blips, pad, glitch FX)
@@ -104,7 +134,8 @@ Requires Node 22, FFmpeg 7 and a Chrome headless shell (`$CHS`). On the author's
 cd film
 ./tools/make-audio.sh && python3 tools/make-launch-audio.py && python3 tools/make-genesis-audio.py   # all scores (first run)
 npx remotion studio src/index.ts        # preview either composition
-COMP=AlpineGenesis ./render.sh          # v3 → out/alpine-3l-genesis.mp4
+COMP=AlpineInterface FINAL_CRF=20 ./render.sh   # v4 → out/alpine-3l-interface.mp4
+COMP=AlpineGenesis FINAL_CRF=20 ./render.sh     # v3 → out/alpine-3l-genesis.mp4
 COMP=AlpineLaunch ./render.sh           # v2 → out/alpine-3l-launch.mp4
 ./render.sh                             # v1 → out/alpine-3l-ascent.mp4
 # finished chunks in out/chunks/<COMP> are skipped; clear that folder to re-render

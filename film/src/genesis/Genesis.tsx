@@ -8,7 +8,7 @@ import { G, GenData, GenFinale, GenGenesis, GenOrbit, GenReveal, GenWarp, GenXra
 export const GENESIS_DURATION = G.end;
 
 // Hard cuts on bar lines (120 BPM, 60 frames per bar); each chapter enters through a glitch.
-const CHAPTERS = [
+export const CHAPTERS = [
   { from: G.genesis, to: G.reveal, C: GenGenesis, label: '00 — GENESIS' },
   { from: G.reveal, to: G.xray, C: GenReveal, label: '01 — REVEAL' },
   { from: G.xray, to: G.data, C: GenXray, label: '02 — X-RAY' },
@@ -18,7 +18,7 @@ const CHAPTERS = [
   { from: G.finale, to: G.end, C: GenFinale, label: '06 — ALPINE 3L' },
 ];
 
-const STEMS: Array<{ src: string; vol: number }> = [
+export const STEMS: Array<{ src: string; vol: number }> = [
   { src: 'kick', vol: 0.8 },
   { src: 'hats', vol: 0.5 },
   { src: 'bass', vol: 0.55 },
@@ -28,7 +28,7 @@ const STEMS: Array<{ src: string; vol: number }> = [
   { src: 'fx', vol: 0.75 },
 ];
 
-const HITS: Array<{ at: number; src: string; vol: number }> = [
+export const HITS: Array<{ at: number; src: string; vol: number }> = [
   { at: G.reveal, src: 'sfx/impact-cine-big.mp3', vol: 0.75 },
   { at: G.xray, src: 'sfx/sweep-digital.mp3', vol: 0.4 },
   { at: G.xray + 92, src: 'sfx/air-zoom-vacuum.mp3', vol: 0.45 },
