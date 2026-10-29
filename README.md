@@ -1,14 +1,34 @@
 # ALPINE 3L — promo films
 
-Two versions of a promotional film for the same jacket, both rendered from this project:
+Three versions of a promotional film for the same jacket, all rendered from this project:
 
 | Version | Watch | Style |
 | --- | --- | --- |
-| **v2 · Launch** | [`alpine-3l-launch.mp4`](alpine-3l-launch.mp4) (48 s) | Tech product-launch keynote: dark stage, spotlit product, metallic display type, glass spec tiles, beat-synced cuts |
+| **v3 · Genesis** | [`alpine-3l-genesis.mp4`](alpine-3l-genesis.mp4) (48 s) | Futuristic motion: particle-built product and numbers, holographic X-ray scan, glitch cuts, warp-speed reel, 3D spec orbit, implosion finale |
+| v2 · Launch | [`alpine-3l-launch.mp4`](alpine-3l-launch.mp4) (48 s) | Tech product-launch keynote: dark stage, spotlit product, metallic display type, glass spec tiles, beat-synced cuts |
 | v1 · Ascent | [`alpine-3l-ascent.mp4`](alpine-3l-ascent.mp4) (46 s) | Narrative climb: altimeter HUD, rain → gale → snow, whiteout end card |
 
-Both are 1920×1080 promotional films for the ALPINE 3L hardshell hiking jacket, built with Remotion from the
+All are 1920×1080 promotional films for the ALPINE 3L hardshell hiking jacket, built with Remotion from the
 product photos and spec sheet in [`vcproo/video-publicity`](https://github.com/vcproo/video-publicity) (clone it into `source/` to see the originals; the images the film uses are already copied into `film/public/img`).
+
+## v3 · Genesis
+
+**Concept:** the product is built in front of you. Thousands of canvas particles, sampled from the product photo
+and from rendered type, swirl in as a galaxy and get "printed" into the jacket by a laser scanline. The same particles
+later form the big numbers and the final logo. Motion vocabulary: decoding text, RGB-split and band-slice glitch cuts,
+a perspective grid floor, tracking callouts locked to points on the jacket, a holographic scan, warp-speed streaks
+between z-axis fly-in panels, and a 3D orbit of spec tags. The original score adds a sub drop, a reese bass,
+telemetry blips and glitch stutters.
+
+| Time | Chapter | Content |
+| --- | --- | --- |
+| 0:00 | Genesis | Particle galaxy → laser-printed particle jacket → solid product |
+| 0:06 | Reveal | Glitch drop, decoded wordmark, grid floor, four tracking callouts |
+| 0:10 | X-ray | Holographic scan with a live layer readout, then a dive into the fabric: glowing 3D layer slabs, "3 → 1" |
+| 0:16 | Performance | ≥20,000 assembles from falling rain, ≥15,000 from rising vapour |
+| 0:22 | Details | Eight features flying in through warp streaks |
+| 0:34 | Specifications | Spec tags orbiting the jacket |
+| 0:40 | Finale | Colourway; the jacket implodes into a singularity; a shockwave, then the logo assembles from particles |
 
 ## v2 · Launch
 
@@ -43,7 +63,7 @@ resolves into the light-background hero shot.
 | 0:35 | Summit | Front/back turntable, 620 g, colourway, tags |
 | 0:41 | Whiteout → end card | "风雨在外，你在山上。" plus use cases and the standard target |
 
-In both versions, all figures come from `source/说明.md`. The abrasion figure (≥20,000 cycles) and GB/T 32614-2023 Class I are labelled as
+In every version, all figures come from `source/说明.md`. The abrasion figure (≥20,000 cycles) and GB/T 32614-2023 Class I are labelled as
 targets, as the spec sheet states. The altitude, temperature and route are fictional storytelling devices. The chest-pocket photo
 (`11_胸前拉链口袋.png`) is not used because a phone brand logo is visible in it.
 
@@ -53,16 +73,20 @@ targets, as the spec sheet states. The altitude, temperature and route are ficti
 alpine-3l-ascent.mp4 final film (1920×1080, 30 fps, AAC audio)
 source/              cloned asset repo (not committed)
 film/
-  src/Root.tsx       registers both compositions: AlpineAscent (v1) and AlpineLaunch (v2)
-  src/theme.ts       fonts, v1 palette and timing table (fonts are shared with v2)
+  src/Root.tsx       registers all compositions: AlpineAscent (v1), AlpineLaunch (v2), AlpineGenesis (v3)
+  src/theme.ts       fonts, v1 palette and timing table (fonts are shared by all versions)
   src/fx.tsx         v1: procedural weather, whiteout, contour lines, altimeter HUD, grain
   src/scenes.tsx     v1: the seven scenes
   src/Film.tsx       v1: sequencing and audio mix
-  src/launch/kit.tsx      v2: stage lighting, aurora, metallic type, sweeps, reflections, HUD frame
+  src/launch/kit.tsx      v2: stage lighting, aurora, metallic type, sweeps, reflections, HUD frame (also used by v3)
   src/launch/scenes.tsx   v2: the eight chapters
   src/launch/Launch.tsx   v2: sequencing and audio mix
+  src/genesis/engine.tsx  v3: particle sampling + canvas, decode text, RGB-split/slice glitch, warp, grid floor, scanlines
+  src/genesis/scenes.tsx  v3: the seven chapters
+  src/genesis/Genesis.tsx v3: sequencing and audio mix
   tools/make-audio.sh         v1 score stems (rain, wind, drone, thump, bell)
   tools/make-launch-audio.py  v2 score stems (120 BPM kick, hats, bass, arp, pad, risers)
+  tools/make-genesis-audio.py v3 score stems (sub drops, reese bass, arp, blips, pad, glitch FX)
   public/img         product photos converted to JPG (+ an alpha PNG of the membrane)
   public/audio       generated score stems (not committed; created by tools/make-audio.sh)
   public/sfx         transition SFX reused from video-shotcraft-intro
@@ -78,8 +102,9 @@ Requires Node 22, FFmpeg 7 and a Chrome headless shell (`$CHS`). On the author's
 ```bash
 . ~/.local/opt/env.sh
 cd film
-./tools/make-audio.sh && python3 tools/make-launch-audio.py   # generate both scores (first run)
+./tools/make-audio.sh && python3 tools/make-launch-audio.py && python3 tools/make-genesis-audio.py   # all scores (first run)
 npx remotion studio src/index.ts        # preview either composition
+COMP=AlpineGenesis ./render.sh          # v3 → out/alpine-3l-genesis.mp4
 COMP=AlpineLaunch ./render.sh           # v2 → out/alpine-3l-launch.mp4
 ./render.sh                             # v1 → out/alpine-3l-ascent.mp4
 # finished chunks in out/chunks/<COMP> are skipped; clear that folder to re-render
