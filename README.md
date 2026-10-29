@@ -1,10 +1,11 @@
 # ALPINE 3L — promo films
 
-Four versions of a promotional film for the same jacket, plus a voiceover cut, all rendered from this project:
+Four versions of a promotional film for the same jacket, plus two voiceover cuts, all rendered from this project:
 
 | Version | Watch | Style |
 | --- | --- | --- |
-| **Opening + v4** | [`alpine-3l-interface-with-opening.mp4`](alpine-3l-interface-with-opening.mp4) (58 s) | A 10 s text-free opening for the voiceover, then v4 · Interface |
+| **Opening v2 + v4** | [`alpine-3l-interface-with-opening-v2.mp4`](alpine-3l-interface-with-opening-v2.mp4) (58 s) | Voiceover cut, new photo presentation: a stepping 3D carousel that collapses into the core |
+| Opening + v4 | [`alpine-3l-interface-with-opening.mp4`](alpine-3l-interface-with-opening.mp4) (58 s) | A 10 s text-free opening for the voiceover, then v4 · Interface |
 | **v4 · Interface** | [`alpine-3l-interface.mp4`](alpine-3l-interface.mp4) (48 s) | v3 wrapped in a live HUD/FUI: boot-up chrome, radar, telemetry, event log, reticle lock-ons, and animated information layers per chapter |
 | v3 · Genesis | [`alpine-3l-genesis.mp4`](alpine-3l-genesis.mp4) (48 s) | Futuristic motion: particle-built product and numbers, holographic X-ray scan, glitch cuts, warp-speed reel, 3D spec orbit, implosion finale |
 | v2 · Launch | [`alpine-3l-launch.mp4`](alpine-3l-launch.mp4) (48 s) | Tech product-launch keynote: dark stage, spotlit product, metallic display type, glass spec tiles, beat-synced cuts |
@@ -24,6 +25,12 @@ A 10-second animated opening with no on-screen text, made to sit under this voic
 | 0–3.5 s | "…using just a few photos of a garment?" | Six of the source product photos land one by one, as prints, on a dark surface |
 | 3.5–6.5 s | "I shared my idea with Claude," | The prints lift off and stream, trailing particles, into a core of light that brightens with each one |
 | 6.5–10 s | "and this is the video it produced." | The core unfolds into a screen showing the jacket; the camera pushes through it into the black v4 opens on |
+
+**Opening v2** (`src/opening/OpeningV2.tsx`, composition `AlpineOpeningV2`) keeps the same beats and the same
+6.5–10 s ending, but presents the photos differently. Six large photo panels stand on a 3D carousel with glass
+edges and floor reflections. On each beat the carousel snaps a turn, and the next photo tears open from a slit
+of light, with a flash, a zoom punch and a shutter click. It then spins up, motion-blurs and collapses into the core
+as a particle vortex.
 
 The music bed (`tools/make-opening-audio.py`) is kept soft for the voice and is in Bb, the chord the v4 score starts on.
 It ends in a riser that lands on v4's first frame. No voiceover is recorded into the file: lay the recording over
@@ -117,7 +124,7 @@ targets, as the spec sheet states. The altitude, temperature and route are ficti
 alpine-3l-ascent.mp4 final film (1920×1080, 30 fps, AAC audio)
 source/              cloned asset repo (not committed)
 film/
-  src/Root.tsx       registers all compositions: AlpineAscent (v1), AlpineLaunch (v2), AlpineGenesis (v3), AlpineInterface (v4), AlpineOpening
+  src/Root.tsx       registers all compositions: AlpineAscent (v1), AlpineLaunch (v2), AlpineGenesis (v3), AlpineInterface (v4), AlpineOpening, AlpineOpeningV2
   src/theme.ts       fonts, v1 palette and timing table (fonts are shared by all versions)
   src/fx.tsx         v1: procedural weather, whiteout, contour lines, altimeter HUD, grain
   src/scenes.tsx     v1: the seven scenes
@@ -131,9 +138,10 @@ film/
   src/fui/chrome.tsx      v4: persistent HUD/FUI chrome
   src/fui/layers.tsx      v4: per-chapter information layers
   src/fui/Interface.tsx   v4: v3 picture + layers + chrome, v3 score + UI cues
-  src/opening/Opening.tsx 10 s text-free opening for the voiceover
+  src/opening/Opening.tsx 10 s text-free opening for the voiceover (v1: prints on a table)
+  src/opening/OpeningV2.tsx opening v2: stepping 3D carousel → vortex
   tools/make-opening-audio.py opening music bed (pad, plucks, chimes, swell, riser)
-  tools/assemble-opening.sh   joins out/alpine-3l-opening.mp4 + out/alpine-3l-interface.mp4
+  tools/assemble-opening.sh   joins an opening + out/alpine-3l-interface.mp4 (OPENING=v2 for opening v2)
   tools/make-audio.sh         v1 score stems (rain, wind, drone, thump, bell)
   tools/make-launch-audio.py  v2 score stems (120 BPM kick, hats, bass, arp, pad, risers)
   tools/make-genesis-audio.py v3 score stems (sub drops, reese bass, arp, blips, pad, glitch FX)
@@ -156,6 +164,8 @@ cd film
 npx remotion studio src/index.ts        # preview either composition
 COMP=AlpineOpening FINAL_CRF=20 ./render.sh     # opening → out/alpine-3l-opening.mp4
 ./tools/assemble-opening.sh                     # opening + v4 → out/alpine-3l-interface-with-opening.mp4
+COMP=AlpineOpeningV2 FINAL_CRF=20 ./render.sh   # opening v2 → out/alpine-3l-opening-v2.mp4
+OPENING=v2 ./tools/assemble-opening.sh          # opening v2 + v4 → out/alpine-3l-interface-with-opening-v2.mp4
 COMP=AlpineInterface FINAL_CRF=20 ./render.sh   # v4 → out/alpine-3l-interface.mp4
 COMP=AlpineGenesis FINAL_CRF=20 ./render.sh     # v3 → out/alpine-3l-genesis.mp4
 COMP=AlpineLaunch ./render.sh           # v2 → out/alpine-3l-launch.mp4
