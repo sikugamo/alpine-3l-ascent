@@ -3,10 +3,11 @@
 set -e
 . ~/.local/opt/env.sh
 cd "$(dirname "$0")"
-# COMP=AlpineAscent (v1, default), AlpineLaunch (v2), AlpineGenesis (v3), AlpineInterface (v4) or AlpineOpening
+# COMP=AlpineAscent (v1, default), AlpineLaunch (v2), AlpineGenesis (v3), AlpineInterface (v4), AlpineOpening or AlpineOpeningV2
 COMP=${COMP:-AlpineAscent}
 export COMP
-if [ "$COMP" = AlpineOpening ]; then RANGES="0-299"; NAME=alpine-3l-opening;
+if [ "$COMP" = AlpineOpeningV2 ]; then RANGES="0-299"; NAME=alpine-3l-opening-v2;
+elif [ "$COMP" = AlpineOpening ]; then RANGES="0-299"; NAME=alpine-3l-opening;
 elif [ "$COMP" = AlpineInterface ]; then RANGES="0-479 480-959 960-1439"; NAME=alpine-3l-interface;
 elif [ "$COMP" = AlpineGenesis ]; then RANGES="0-479 480-959 960-1439"; NAME=alpine-3l-genesis;
 elif [ "$COMP" = AlpineLaunch ]; then RANGES="0-479 480-959 960-1439"; NAME=alpine-3l-launch; else RANGES="0-459 460-919 920-1379"; NAME=alpine-3l-ascent; fi

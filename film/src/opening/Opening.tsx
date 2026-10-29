@@ -139,7 +139,7 @@ const Core: React.FC = () => {
 };
 
 /** The core unfolds into a screen showing the jacket, then the camera pushes through it into the film. */
-const Screen: React.FC = () => {
+export const Screen: React.FC = () => {
   const f = useCurrentFrame();
   if (f < BLOOM) return null;
   const w = 1280 * expo((f - BLOOM) / 18);
